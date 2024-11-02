@@ -1,30 +1,12 @@
 # Create Operation
 
-This document outlines the steps taken to create a new Book instance and confirm its creation.
+Command: Create a Book instance with the title “1984”, author “George Orwell”, and publication year 1949.
 
-## Command
+```python
+book = Book.objects.create(title="1984", author="George Orwell", publication_year=1949)
+# Create Operation
 
-1. **Create a Book instance**:
-   To create a book titled “1984” by George Orwell, published in 1949, use the following command:
+Command: Create a Book instance with the title “1984”, author “George Orwell”, and publication year 1949.
 
-   ```python
-   book = Book(title="1984", author="George Orwell", publication_year=1949)
-
-2. **Save a Book**:
-   Save book titled “1984” by George Orwell, published in 1949, use the following command:
-
-   ```python
-   book.save()
-
-3. **Confirming the creation of the book**:
-    Confirming the creation of the book, use the following command:
-
-   ```python
-    Book.objects.all()
-
-## Output
-
-The expected output is: 1984
-
-
-
+```python
+book = Book.objects.create(title="1984", author="George Orwell", publication_year=1949)
