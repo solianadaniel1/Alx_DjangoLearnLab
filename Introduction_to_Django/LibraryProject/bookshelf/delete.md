@@ -1,37 +1,6 @@
 # Delete Operation
 
-This document outlines the steps taken to delete the Book instance previously created and confirm its deletion.
+First, ensure the Book model is imported:
 
-## Command
-
-1. **Retrieve the book instance to delete**:
-    To delete the book titled “Nineteen Eighty-Four”, first retrieve it:
-
-    ```python
-    retrieved_book = Book.objects.get(title="Nineteen Eighty-Four")
-    ```
-
-2. **Delete the retrieved book**:
-    Once you have the instance, you can delete it:
-
-    ```python
-    retrieved_book.delete()
-    ```
-
-3. **Confirm Deletion**:
-    To confirm that the book has been deleted, retrieve all books:
-
-    ```python
-    books = Book.objects.all()
-
-2. **Print retrived book**:
-   To print the book after deletion , use the following command:
-
-   ```python
-    print(books)
-   
-
-## Output
-
-The expected output is:
-
+```python
+from bookshelf.models import Book
