@@ -9,9 +9,8 @@ This document outlines the steps taken to create a new Book instance and confirm
 
    ```python
    book = Book(title="1984", author="George Orwell", publication_year=1949)
-   book.save()
 
-1. **Save a Book**:
+2. **Save a Book**:
    Save book titled “1984” by George Orwell, published in 1949, use the following command:
 
    ```python
