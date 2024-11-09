@@ -34,7 +34,7 @@ def register(request):
 def is_admin(user):
     return user.userprofile.role == 'Admin'
 
-# Check if user has 'Librarian' role
+# Function to check if the user is a librarian
 def is_librarian(user):
     return user.userprofile.role == 'Librarian'
 
@@ -46,10 +46,11 @@ def is_member(user):
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
+# Librarian view that only accessible by users with 'Librarian' role
 @user_passes_test(is_librarian)
 def librarian_view(request):
-    # Logic for the Librarian view
-    return render(request, 'librarian_view.html')
+    # Render the template for the librarian view
+    return render(request, 'relationship_app/librarian_view.html')
 
 # Member view
 @user_passes_test(is_member)
