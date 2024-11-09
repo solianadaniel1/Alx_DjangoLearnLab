@@ -45,6 +45,14 @@ def delete_book(request, pk):
         return redirect('book_list')  # Redirect to book list after deleting
     return render(request, 'relationship_app/delete_book.html', {'book': book})
 
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        book.delete()
+        return redirect('book_list')  # Redirect to a list of books or another page
+    return render(request, 'relationship_app/confirm_delete.html', {'book': book})
+
 def list_books(request):
     books = Book.objects.all()  # Get all books from the database
     return render(request, 'relationship_app/list_books.html', {'books': books})
