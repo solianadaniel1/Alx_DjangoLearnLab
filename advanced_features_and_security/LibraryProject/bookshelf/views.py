@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import permission_required
 from .models import Book
 from django.http import HttpResponseForbidden
+from .forms import ExampleForm
 
 # View for creating a book
 @permission_required('bookshelf.can_create', raise_exception=True)
@@ -46,3 +47,14 @@ def delete_book(request, book_id):
 def view_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     return render(request, 'book_detail.html', {'book': book})
+
+def create_book(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            form.save()  # This will save the form data to the database
+            return redirect('book_list')  # Redirect to the book list or another page
+    else:
+        form = ExampleForm()
+
+    return render(request, 'bookshelf/form_example.html', {'form': form})
