@@ -139,3 +139,21 @@ CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS.
 SESSION_COOKIE_SECURE = True  # Ensures session cookie is only sent over HTTPS.
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS) settings
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow the site to be included in browsers' HSTS preload lists
+
+# Ensure secure cookies
+SESSION_COOKIE_SECURE = True  # Cookies will only be sent over HTTPS
+CSRF_COOKIE_SECURE = True  # CSRF cookies will only be sent over HTTPS
+
+# Enable secure browser settings to help protect against certain attacks
+X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent content type sniffing
+SECURE_BROWSER_XSS_FILTER = True  # Enable browser XSS filter
