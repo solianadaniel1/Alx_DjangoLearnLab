@@ -1,5 +1,7 @@
 from django.db import models
-
+from rest_framework.viewsets import ModelViewSet
+from .models import Book
+from .serializers import BookSerializer
 # Create your models here.
 
 class Book(models.Model):
@@ -8,3 +10,10 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
+class BookViewSet(ModelViewSet):
+    """
+    A ViewSet for viewing and editing book instances.
+    """
+    queryset = Book.objects.all()  # Fetches all Book objects
+    serializer_class = BookSerializer  # Specifies the serializer to use
