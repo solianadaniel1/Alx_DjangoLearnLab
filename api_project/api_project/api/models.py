@@ -1,6 +1,5 @@
 from django.db import models
 from rest_framework.viewsets import ModelViewSet
-from .models import Book
 from .serializers import BookSerializer
 # Create your models here.
 
