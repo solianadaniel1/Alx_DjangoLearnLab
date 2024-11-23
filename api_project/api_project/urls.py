@@ -16,12 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from api import views
+
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Welcome to the API! Go to /api/books/ to view the book list.")
 
 urlpatterns = [
+    path('', index, name='index'),  # Handles the root URL
     path('admin/', admin.site.urls),
-    path('', views.BookList.as_view()),
-
+    path('api/', include('api.urls'))
 ]
 
 
