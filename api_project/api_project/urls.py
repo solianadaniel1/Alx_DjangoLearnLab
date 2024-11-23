@@ -16,11 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+
+from django.http import JsonResponse
+
+def root_view(request):
+    return JsonResponse({"message": "Welcome to the API. Visit /api/books/ to see the books."})
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),  # Include api app's URLs
-
+    path('api/', include('api.urls')),
+    path('', root_view),  # Define a root path
 ]
+
 
 
 
