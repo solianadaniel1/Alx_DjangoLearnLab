@@ -12,6 +12,7 @@ from .models import Post, Comment
 from .forms import CommentForm
 from .models import Post
 from django.db.models import Q
+from taggit.models import Tag
 
 def register_view(request):
     if request.method == 'POST':
@@ -65,7 +66,16 @@ def add_comment(request, post_id):
     else:
         form = CommentForm()
     return render(request, 'blog/add_comment.html', {'form': form})
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'post_list_by_tag.html'  # Template to render filtered posts
+    context_object_name = 'posts'
 
+    def get_queryset(self):
+        tag_slug = self.kwargs['tag_slug']
+        tag = Tag.objects.get(slug=tag_slug)  # Get the tag object using the slug
+        return Post.objects.filter(tags=tag)  # Filter posts by the selected tag
+    
 # CreateView: Allow users to create posts
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
