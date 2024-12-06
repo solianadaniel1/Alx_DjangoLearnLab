@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
-from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView
+from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, add_comment
 
 urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='blog/login.html'), name='login'),
@@ -13,4 +13,5 @@ urlpatterns = [
     path('post/new/', PostCreateView.as_view(), name='post-create'),
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
+    path('post/<int:post_id>/comments/add/', add_comment, name='add-comment'),
 ]
