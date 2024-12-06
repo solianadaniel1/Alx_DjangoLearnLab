@@ -71,6 +71,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = 'blog/post_form.html'
+    success_url = reverse_lazy('post_list')  # Redirect to post list upon successful creation
 
     def form_valid(self, form):
         form.instance.author = self.request.user
