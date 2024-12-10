@@ -12,7 +12,6 @@ class RegisterView(APIView):
         # Use the RegisterSerializer for the user registration
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
-            # Create the user and token
             user, token = serializer.save()
             # Return token and user details
             return Response(
