@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework import filters
 from rest_framework.views import APIView
 from .models import Post
@@ -67,12 +67,13 @@ class CommentViewSet(viewsets.ModelViewSet):
             return Response({"detail": "You do not have permission to delete this comment."}, status=status.HTTP_403_FORBIDDEN)
         return super().destroy(request, *args, **kwargs)
 
-class LikePostView(APIView):
+class LikePostView(generics.GenericAPIView):
+    queryset = Post.objects.all()  # Define the queryset for GenericAPIView
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
         # Retrieve the post using generics.get_object_or_404
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(self.get_queryset(), pk=pk)
 
         # Add or update the like
         like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -91,12 +92,13 @@ class LikePostView(APIView):
         return Response({'message': 'Post liked successfully'}, status=status.HTTP_200_OK)
 
 
-class UnlikePostView(APIView):
+class UnlikePostView(generics.GenericAPIView):
+    queryset = Post.objects.all()  # Define the queryset for GenericAPIView
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
         # Retrieve the post using generics.get_object_or_404
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(self.get_queryset(), pk=pk)
 
         # Remove the like if it exists
         like = Like.objects.filter(user=request.user, post=post).first()
