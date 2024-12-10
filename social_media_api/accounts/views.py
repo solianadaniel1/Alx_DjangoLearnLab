@@ -11,18 +11,22 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def follow_user(request, user_id):
-    user_to_follow = get_user_model().objects.get(id=user_id)
-    request.user.following.add(user_to_follow)
-    return Response({'message': f'You are now following {user_to_follow.username}'})
 
-@api_view(['POST'])
-def unfollow_user(request, user_id):
-    user_to_unfollow = get_user_model().objects.get(id=user_id)
-    request.user.following.remove(user_to_unfollow)
-    return Response({'message': f'You have unfollowed {user_to_unfollow.username}'})
+
+class FollowView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def follow_user(request, user_id):
+        user_to_follow = get_user_model().objects.get(id=user_id)
+        request.user.following.add(user_to_follow)
+        return Response({'message': f'You are now following {user_to_follow.username}'})
+
+
+class UnfollowView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def unfollow_user(request, user_id):
+        user_to_unfollow = get_user_model().objects.get(id=user_id)
+        request.user.following.remove(user_to_unfollow)
+        return Response({'message': f'You have unfollowed {user_to_unfollow.username}'})
 
 
 class RegisterView(APIView):
