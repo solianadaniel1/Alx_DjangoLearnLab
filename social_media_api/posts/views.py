@@ -66,14 +66,13 @@ class CommentViewSet(viewsets.ModelViewSet):
         if comment.author != request.user:
             return Response({"detail": "You do not have permission to delete this comment."}, status=status.HTTP_403_FORBIDDEN)
         return super().destroy(request, *args, **kwargs)
-
 class LikePostView(generics.GenericAPIView):
-    queryset = Post.objects.all()  # Define the queryset for GenericAPIView
+    queryset = Post.objects.all()
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
-        # Retrieve the post using generics.get_object_or_404
-        post = generics.get_object_or_404(self.get_queryset(), pk=pk)
+        # Using the exact pattern "generics.get_object_or_404(Post, pk=pk)"
+        post = generics.get_object_or_404(Post, pk=pk)
 
         # Add or update the like
         like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -93,12 +92,12 @@ class LikePostView(generics.GenericAPIView):
 
 
 class UnlikePostView(generics.GenericAPIView):
-    queryset = Post.objects.all()  # Define the queryset for GenericAPIView
+    queryset = Post.objects.all()
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
-        # Retrieve the post using generics.get_object_or_404
-        post = generics.get_object_or_404(self.get_queryset(), pk=pk)
+        # Using the exact pattern "generics.get_object_or_404(Post, pk=pk)"
+        post = generics.get_object_or_404(Post, pk=pk)
 
         # Remove the like if it exists
         like = Like.objects.filter(user=request.user, post=post).first()
