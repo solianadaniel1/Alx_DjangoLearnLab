@@ -5,6 +5,24 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import RegisterSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def follow_user(request, user_id):
+    user_to_follow = get_user_model().objects.get(id=user_id)
+    request.user.following.add(user_to_follow)
+    return Response({'message': f'You are now following {user_to_follow.username}'})
+
+@api_view(['POST'])
+def unfollow_user(request, user_id):
+    user_to_unfollow = get_user_model().objects.get(id=user_id)
+    request.user.following.remove(user_to_unfollow)
+    return Response({'message': f'You have unfollowed {user_to_unfollow.username}'})
 
 
 class RegisterView(APIView):
@@ -41,3 +59,4 @@ class ProfileView(APIView):
         user = request.user
         serializer = UserSerializer(user)
         return Response(serializer.data)
+

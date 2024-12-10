@@ -5,7 +5,18 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework import filters
+from rest_framework.views import APIView
+from .models import Post
+from rest_framework.permissions import IsAuthenticated
 
+class FeedView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        following_users = request.user.following.all()
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+        post_data = PostSerializer(posts, many=True).data
+        return Response(post_data)
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
