@@ -1,21 +1,22 @@
-from django.contrib.auth import authenticate, get_user_model
-from rest_framework import status, permissions
+from django.contrib.auth import authenticate
+from rest_framework import status, permissions, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import RegisterSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
+from django.contrib.auth import get_user_model
 
 CustomUser = get_user_model()
 
-
-class FollowView(APIView):
+class FollowUserView(generics.GenericAPIView):
+    queryset = CustomUser.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         try:
-            user_to_follow = CustomUser.objects.get(id=user_id)
+            user_to_follow = self.get_queryset().get(id=user_id)
         except CustomUser.DoesNotExist:
             raise NotFound("User not found")
 
@@ -32,12 +33,13 @@ class FollowView(APIView):
         )
 
 
-class UnfollowView(APIView):
+class UnfollowUserView(generics.GenericAPIView):
+    queryset = CustomUser.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         try:
-            user_to_unfollow = CustomUser.objects.get(id=user_id)
+            user_to_unfollow = self.get_queryset().get(id=user_id)
         except CustomUser.DoesNotExist:
             raise NotFound("User not found")
 
@@ -52,7 +54,6 @@ class UnfollowView(APIView):
             {"message": f"You have unfollowed {user_to_unfollow.username}"},
             status=status.HTTP_200_OK,
         )
-
 
 class RegisterView(APIView):
     def post(self, request):
@@ -70,8 +71,8 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
+        username = request.data.get('username')
+        password = request.data.get('password')
 
         # Authenticate the user using the provided credentials
         user = authenticate(username=username, password=password)
@@ -88,3 +89,4 @@ class ProfileView(APIView):
         user = request.user
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
