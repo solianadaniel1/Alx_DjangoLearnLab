@@ -2,12 +2,13 @@ from rest_framework import viewsets, permissions
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework import filters
 from rest_framework.views import APIView
 from .models import Post
 from rest_framework.permissions import IsAuthenticated
+from .models import Post, Like
+from notifications.models import Notification
 
 class FeedView(APIView):
     permission_classes = [IsAuthenticated]
@@ -64,3 +65,42 @@ class CommentViewSet(viewsets.ModelViewSet):
         if comment.author != request.user:
             return Response({"detail": "You do not have permission to delete this comment."}, status=status.HTTP_403_FORBIDDEN)
         return super().destroy(request, *args, **kwargs)
+
+class LikePostView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            post = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        if Like.objects.filter(user=request.user, post=post).exists():
+            return Response({'error': 'You already liked this post'}, status=status.HTTP_400_BAD_REQUEST)
+
+        like = Like.objects.create(user=request.user, post=post)
+        # Create a notification
+        Notification.objects.create(
+            recipient=post.user,
+            actor=request.user,
+            verb='liked your post',
+            target=post,
+        )
+        return Response({'message': 'Post liked successfully'}, status=status.HTTP_200_OK)
+
+
+class UnlikePostView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            post = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            like = Like.objects.get(user=request.user, post=post)
+            like.delete()
+            return Response({'message': 'Post unliked successfully'}, status=status.HTTP_200_OK)
+        except Like.DoesNotExist:
+            return Response({'error': 'You have not liked this post'}, status=status.HTTP_400_BAD_REQUEST)
